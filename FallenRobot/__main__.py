@@ -159,9 +159,11 @@ for module_name in ALL_MODULES:
 def send_help(chat_id, text, keyboard=None):
     if not keyboard:
         keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
-    dispatcher.bot.send_message(
+    
+    dispatcher.bot.send_photo(
         chat_id=chat_id,
-        text=text,
+        photo=START_IMG,
+        caption=text,
         parse_mode=ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         reply_markup=keyboard,
@@ -171,10 +173,12 @@ def send_help(chat_id, text, keyboard=None):
 def start(update: Update, context: CallbackContext):
     args = context.args
     uptime = get_readable_time((time.time() - StartTime))
+
     if update.effective_chat.type == "private":
         if len(args) >= 1:
             if args[0].lower() == "help":
                 send_help(update.effective_chat.id, HELP_STRINGS)
+
             elif args[0].lower().startswith("ghelp_"):
                 mod = args[0].lower().split("_", 1)[1]
                 if not HELPABLE.get(mod, False):
@@ -189,6 +193,7 @@ def start(update: Update, context: CallbackContext):
 
             elif args[0].lower() == "markdownhelp":
                 IMPORTED["exᴛʀᴀs"].markdown_help_sender(update)
+
             elif args[0].lower().startswith("stngs_"):
                 match = re.match("stngs_(.*)", args[0].lower())
                 chat = dispatcher.bot.getChat(match.group(1))
@@ -203,23 +208,28 @@ def start(update: Update, context: CallbackContext):
 
         else:
             first_name = update.effective_user.first_name
+
+            # Send sticker
             update.effective_message.reply_sticker(
                 "CAACAgUAAxkBAAJYsmLWRvm70cE-mmxSNCovEf4v1ueJAAIcCAACbMK4VuL4EmZEkq8WKQQ"
             )
-            update.effective_message.reply_text(
-                PM_START_TEXT.format(escape_markdown(first_name), BOT_NAME),
+
+            # Send photo with welcome message
+            update.effective_message.reply_photo(
+                START_IMG,
+                caption=PM_START_TEXT.format(escape_markdown(first_name), BOT_NAME),
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
-                timeout=60,
             )
+
     else:
         update.effective_message.reply_photo(
             START_IMG,
-            caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ !\n<b>ɪ ᴅɪᴅɴ'ᴛ sʟᴇᴘᴛ sɪɴᴄᴇ​:</b> <code>{}</code>".format(
+            caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ !\n<b>ɪ ᴅɪᴅɴ'ᴛ sʟᴇᴘᴛ sɪɴᴄᴇ:</b> <code>{}</code>".format(
                 uptime
             ),
             parse_mode=ParseMode.HTML,
-        )
+            )
 
 
 def error_handler(update, context):

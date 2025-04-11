@@ -46,7 +46,6 @@ def get_user_id(username):
 
     return None
 
-
 @dev_plus
 def broadcast(update: Update, context: CallbackContext):
     to_send = update.effective_message.text.split(None, 1)
@@ -56,14 +55,18 @@ def broadcast(update: Update, context: CallbackContext):
         to_user = False
         if to_send[0] == "/broadcastgroups":
             to_group = True
-        if to_send[0] == "/broadcastusers":
+        elif to_send[0] == "/broadcastusers":
             to_user = True
         else:
             to_group = to_user = True
+
         chats = sql.get_all_chats() or []
         users = get_all_users()
         failed = 0
         failed_user = 0
+        success_group = 0
+        success_user = 0
+
         if to_group:
             for chat in chats:
                 try:
@@ -73,9 +76,11 @@ def broadcast(update: Update, context: CallbackContext):
                         parse_mode="MARKDOWN",
                         disable_web_page_preview=True,
                     )
+                    success_group += 1
                     sleep(0.1)
                 except TelegramError:
                     failed += 1
+
         if to_user:
             for user in users:
                 try:
@@ -85,11 +90,22 @@ def broadcast(update: Update, context: CallbackContext):
                         parse_mode="MARKDOWN",
                         disable_web_page_preview=True,
                     )
+                    success_user += 1
                     sleep(0.1)
                 except TelegramError:
                     failed_user += 1
+
+        total_chats = sql.num_chats()
+        total_users = sql.num_users()
+
         update.effective_message.reply_text(
-            f"Broadcast complete.\nGroups failed: {failed}.\nUsers failed: {failed_user}."
+            f"**Broadcast Complete**\n\n"
+            f"**Total Users:** {total_users}\n"
+            f"**Total Groups:** {total_chats}\n\n"
+            f"**Successful (Groups):** {success_group}\n"
+            f"**Failed (Groups):** {failed}\n\n"
+            f"**Successful (Users):** {success_user}\n"
+            f"**Failed (Users):** {failed_user}"
         )
 
 

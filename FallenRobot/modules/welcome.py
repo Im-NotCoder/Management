@@ -173,7 +173,7 @@ def new_member(update: Update, context: CallbackContext):
         if should_welc:
             reply = update.message.message_id
             cleanserv = sql.clean_service(chat.id)
-            # Clean service welcome
+
             if cleanserv:
                 try:
                     dispatcher.bot.delete_message(chat.id, update.message.message_id)
@@ -181,7 +181,6 @@ def new_member(update: Update, context: CallbackContext):
                     pass
                 reply = False
 
-            # Give the owner a special welcome
             if new_mem.id == OWNER_ID:
                 update.effective_message.reply_text(
                     "Oh, Genos? Let's get this moving.", reply_to_message_id=reply
@@ -193,7 +192,6 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome Devs
             elif new_mem.id in DEV_USERS:
                 update.effective_message.reply_text(
                     "Be cool! A member of the Heroes Association just joined.",
@@ -206,7 +204,6 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome Sudos
             elif new_mem.id in DRAGONS:
                 update.effective_message.reply_text(
                     "Whoa! A Dragon disaster just joined! Stay Alert!",
@@ -219,7 +216,6 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome Support
             elif new_mem.id in DEMONS:
                 update.effective_message.reply_text(
                     "Huh! Someone with a Demon disaster level just joined!",
@@ -232,7 +228,6 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome Whitelisted
             elif new_mem.id in TIGERS:
                 update.effective_message.reply_text(
                     "Roar! A Tiger disaster just joined!", reply_to_message_id=reply
@@ -244,7 +239,6 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome Tigers
             elif new_mem.id in WOLVES:
                 update.effective_message.reply_text(
                     "Awoo! A Wolf disaster just joined!", reply_to_message_id=reply
@@ -256,52 +250,52 @@ def new_member(update: Update, context: CallbackContext):
                 )
                 continue
 
-            # Welcome yourself
             elif new_mem.id == bot.id:
-    if not FallenRobot.ALLOW_CHATS:
-        with suppress(BadRequest):
-            update.effective_message.reply_text(
-                f"Groups are disabled for {bot.first_name}, I'm outta here."
-            )
-        bot.leave_chat(update.effective_chat.id)
-        return
+                if not FallenRobot.ALLOW_CHATS:
+                    with suppress(BadRequest):
+                        update.effective_message.reply_text(
+                            f"Groups are disabled for {bot.first_name}, I'm outta here."
+                        )
+                    bot.leave_chat(update.effective_chat.id)
+                    return
 
-    bot.send_message(
-        EVENT_LOGS,
-        "#NEW_GROUP\n<b>Group name:</b> {}\n<b>ID:</b> <code>{}</code>\nAdded by : {} | <code>{}</code>".format(
-            html.escape(chat.title),
-            chat.id,
-            user.first_name or "Unknown",
-            user.id,
-        ),
-        parse_mode=ParseMode.HTML,
-    )
-
-    update.effective_message.reply_photo(
-        photo=ALPHA_IMG,
-        caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
-                "Join support and channel update by clicking the buttons below!".format(
-            user.first_name, bot.first_name, chat.title
-        ),
-        reply_to_message_id=reply,
-        parse_mode=ParseMode.MARKDOWN,
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        text="Support🚑",
-                        url="https://t.me/Purvibots",
+                bot.send_message(
+                    EVENT_LOGS,
+                    "#NEW_GROUP\n<b>Group name:</b> {}\n<b>ID:</b> <code>{}</code>\nAdded by : {} | <code>{}</code>".format(
+                        html.escape(chat.title),
+                        chat.id,
+                        user.first_name or "Unknown",
+                        user.id,
                     ),
-                    InlineKeyboardButton(
-                        text="Updates🛰️",
-                        url="https://t.me/Purvi_Updates",
-                    ),
-                ]
-            ]
-        ),
-    )
-    continue
+                    parse_mode=ParseMode.HTML,
+                )
 
+                update.effective_message.reply_photo(
+                    photo=ALPHA_IMG,
+                    caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
+                            "Join support and channel update by clicking the buttons below!".format(
+                        user.first_name, bot.first_name, chat.title
+                    ),
+                    reply_to_message_id=reply,
+                    parse_mode=ParseMode.MARKDOWN,
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    text="Support",
+                                    url="https://t.me/Purvibots",
+                                ),
+                                InlineKeyboardButton(
+                                    text="Updates",
+                                    url="https://t.me/Purvi_Updates",
+                                ),
+                            ]
+                        ]
+                    ),
+                )
+                continue
+
+            
             else:
                 buttons = sql.get_welc_buttons(chat.id)
                 keyb = build_keyboard(buttons)

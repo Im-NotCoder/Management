@@ -258,47 +258,49 @@ def new_member(update: Update, context: CallbackContext):
 
             # Welcome yourself
             elif new_mem.id == bot.id:
-                if not FallenRobot.ALLOW_CHATS:
-                    with suppress(BadRequest):
-                        update.effective_message.reply_text(
-                            f"Groups are disabled for {bot.first_name}, I'm outta here."
-                        )
-                    bot.leave_chat(update.effective_chat.id)
-                    return
-                bot.send_message(
-                    EVENT_LOGS,
-                    "#NEW_GROUP\n<b>Group name:</b> {}\n<b>ID:</b> <code>{}</code>\nAdded by : {} | <code>{}</code>".format(
-                        html.escape(chat.title),
-                        chat.id,
-                        user.first_name or "Unknown",
-                        user.id,
-                    ),
-                    parse_mode=ParseMode.HTML,
-                )
-         update.effective_message.reply_photo(
-    photo=ALPHA_IMG,
-    caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
-            "Join support and channel update by clicking the buttons below!".format(
-        user.first_name, context.bot.first_name, chat.title
-    ),
-    reply_to_message_id=reply,
-    parse_mode=ParseMode.MARKDOWN,
-    reply_markup=InlineKeyboardMarkup(
-        [
+    if not FallenRobot.ALLOW_CHATS:
+        with suppress(BadRequest):
+            update.effective_message.reply_text(
+                f"Groups are disabled for {bot.first_name}, I'm outta here."
+            )
+        bot.leave_chat(update.effective_chat.id)
+        return
+
+    bot.send_message(
+        EVENT_LOGS,
+        "#NEW_GROUP\n<b>Group name:</b> {}\n<b>ID:</b> <code>{}</code>\nAdded by : {} | <code>{}</code>".format(
+            html.escape(chat.title),
+            chat.id,
+            user.first_name or "Unknown",
+            user.id,
+        ),
+        parse_mode=ParseMode.HTML,
+    )
+
+    update.effective_message.reply_photo(
+        photo=ALPHA_IMG,
+        caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
+                "Join support and channel update by clicking the buttons below!".format(
+            user.first_name, bot.first_name, chat.title
+        ),
+        reply_to_message_id=reply,
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(
             [
-                InlineKeyboardButton(
-                    text="Support🚑",
-                    url="https://t.me/Purvibots",
-                ),
-                InlineKeyboardButton(
-                    text="Updates🛰️",
-                    url="https://t.me/Purvi_Updates",
-                ),
+                [
+                    InlineKeyboardButton(
+                        text="Support🚑",
+                        url="https://t.me/Purvibots",
+                    ),
+                    InlineKeyboardButton(
+                        text="Updates🛰️",
+                        url="https://t.me/Purvi_Updates",
+                    ),
+                ]
             ]
-        ]
-    ),
-)
-               continue
+        ),
+    )
+    continue
 
             else:
                 buttons = sql.get_welc_buttons(chat.id)

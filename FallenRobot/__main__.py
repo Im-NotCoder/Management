@@ -517,6 +517,7 @@ def get_help(update: Update, context: CallbackContext):
         ]
     ]
             )
+        )
         return
 
     elif len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):

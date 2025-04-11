@@ -428,7 +428,7 @@ def Fallen_about_callback(update: Update, context: CallbackContext):
         )
     elif query.data == "fallen_back":
         first_name = update.effective_user.first_name
-        query.message.edit_caption(
+        #query.message.edit_caption(
             PM_START_TEXT.format(escape_markdown(first_name), BOT_NAME),
             reply_markup=InlineKeyboardMarkup(buttons),
             parse_mode=ParseMode.MARKDOWN,

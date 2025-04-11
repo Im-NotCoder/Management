@@ -275,7 +275,7 @@ def new_member(update: Update, context: CallbackContext):
                     ),
                     parse_mode=ParseMode.HTML,
                 )
-                update.effective_message.reply_photo(
+         update.effective_message.reply_photo(
     photo=ALPHA_IMG,
     caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
             "Join support and channel update by clicking the buttons below!".format(
@@ -298,7 +298,7 @@ def new_member(update: Update, context: CallbackContext):
         ]
     ),
 )
-continue
+               continue
 
             else:
                 buttons = sql.get_welc_buttons(chat.id)

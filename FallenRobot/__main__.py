@@ -336,7 +336,7 @@ def help_button(update, context):
             )
 
         elif back_match:
-            query.message.caption(
+            query.message.edit_caption(
                 text=HELP_STRINGS,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(

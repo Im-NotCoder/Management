@@ -73,6 +73,9 @@ ENUM_FUNC_MAP = {
 VERIFIED_USER_WAITLIST = {}
 
 
+
+ALPHA_IMG = "https://telegra.ph/file/e9284f19f009784e24043.jpg"
+
 # do not async
 def send(update, message, keyboard, backup_message):
     chat = update.effective_chat
@@ -272,10 +275,30 @@ def new_member(update: Update, context: CallbackContext):
                     ),
                     parse_mode=ParseMode.HTML,
                 )
-                update.effective_message.reply_text(
-                    "Watashi ga kita !", reply_to_message_id=reply
-                )
-                continue
+                update.effective_message.reply_photo(
+    photo=ALPHA_IMG,
+    caption="Hey {}, I'm {}! Thank you for adding me to *{}*\n\n"
+            "Join support and channel update by clicking the buttons below!".format(
+        user.first_name, context.bot.first_name, chat.title
+    ),
+    reply_to_message_id=reply,
+    parse_mode=ParseMode.MARKDOWN,
+    reply_markup=InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text="Support🚑",
+                    url="https://t.me/Purvibots",
+                ),
+                InlineKeyboardButton(
+                    text="Updates🛰️",
+                    url="https://t.me/Purvi_Updates",
+                ),
+            ]
+        ]
+    ),
+)
+continue
 
             else:
                 buttons = sql.get_welc_buttons(chat.id)

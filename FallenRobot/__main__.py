@@ -461,7 +461,7 @@ def Source_about_callback(update: Update, context: CallbackContext):
             parse_mode=ParseMode.MARKDOWN,
             #disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="◁", callback_data="source_back")]]
+                [[InlineKeyboardButton(text="ʙᴀᴄᴋ", callback_data="source_back")]]
             ),
         )
     elif query.data == "source_back":
@@ -471,7 +471,7 @@ def Source_about_callback(update: Update, context: CallbackContext):
             reply_markup=InlineKeyboardMarkup(buttons),
             parse_mode=ParseMode.MARKDOWN,
             timeout=60,
-            disable_web_page_preview=True,
+            #disable_web_page_preview=True,
         )
 
 
